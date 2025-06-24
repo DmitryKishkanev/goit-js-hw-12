@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather</title>
+  </head>
+  <body class="weather-body">
+    <form action="submit" class="js-search">
+      <input type="text" name="query" placeholder="Enter city..." />
+      <select name="days" class="weather-select">
+        <option value="3">3</option>
+        <option value="5">5</option>
+        <option value="7">7</option>
+        <option value="10">10</option>
+        <option value="14">14</option>
+      </select>
+      <button>Search</button>
+    </form>
+
+    <span class="loader"></span>
+
+    <ul class="js-list"></ul>
+
+    <script type="module" src="./js/weather/weather-main.js"></script>
+  </body>
+</html>
