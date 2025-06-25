@@ -4,7 +4,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 
 // Функция запроса на бэкенд
 export function fetchWeather(city, days) {
-  const BASE_URL = 'http://api.weatherapi.com/v1';
+  const BASE_URL = 'https://api.weatherapi.com/v1';
   const API_KEY = '09a333eec31b44aab6a163037252406';
 
   return fetch(

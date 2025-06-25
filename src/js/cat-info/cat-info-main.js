@@ -27,22 +27,39 @@ breedSelect.classList.add('is-hidden');
 // Отображения loader
 showLoader();
 
-// Реализация запроса всех пород кошек, создание списка, оброботка ошибки
-fetchBreeds()
-  .then(response => {
+async function handleBreeds() {
+  try {
+    const response = await fetchBreeds();
     createSelect(response, breedSelect);
-  })
-  .catch(error => {
+  } catch (error) {
     // Отображаем сообщение об ошибке
     iziToastOptions(error);
 
     // Скрываем HTML-элемент списка
     breedSelect.classList.add('is-hidden');
-  })
-  .finally(() => {
+  } finally {
     // Скрываем Loader
     hideLoader();
-  });
+  }
+}
+handleBreeds();
+
+// Реализация запроса всех пород кошек, создание списка, оброботка ошибки
+// fetchBreeds()
+//   .then(response => {
+//     createSelect(response, breedSelect);
+//   })
+//   .catch(error => {
+//     // Отображаем сообщение об ошибке
+//     iziToastOptions(error);
+
+//     // Скрываем HTML-элемент списка
+//     breedSelect.classList.add('is-hidden');
+//   })
+//   .finally(() => {
+//     // Скрываем Loader
+//     hideLoader();
+//   });
 
 // Обработчик слушателя события
 function onbreedSelect() {
