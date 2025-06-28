@@ -19,7 +19,7 @@ const breedSelect = document.querySelector('.breed-select');
 const infoContainer = document.querySelector('.cat-info');
 
 // Вешаем слушатель события change на HTML-элемент списка
-breedSelect.addEventListener('change', onbreedSelect);
+breedSelect.addEventListener('change', onBreedSelect);
 
 // Скрываем HTML-элемент списка
 breedSelect.classList.add('is-hidden');
@@ -44,25 +44,8 @@ async function handleBreeds() {
 }
 handleBreeds();
 
-// Реализация запроса всех пород кошек, создание списка, оброботка ошибки
-// fetchBreeds()
-//   .then(response => {
-//     createSelect(response, breedSelect);
-//   })
-//   .catch(error => {
-//     // Отображаем сообщение об ошибке
-//     iziToastOptions(error);
-
-//     // Скрываем HTML-элемент списка
-//     breedSelect.classList.add('is-hidden');
-//   })
-//   .finally(() => {
-//     // Скрываем Loader
-//     hideLoader();
-//   });
-
 // Обработчик слушателя события
-function onbreedSelect() {
+async function onBreedSelect() {
   // Скрываем контейнер
   infoContainer.classList.add('is-hidden');
 
@@ -71,21 +54,18 @@ function onbreedSelect() {
 
   // Получаем в переменную значение выбранное из списка
   const selectedCatId = breedSelect.value;
-
-  // Реализация запроса породы кошки по значению выбранному из списка,
-  // отображение данных, обработка ошибки
-  fetchCatByBreed(selectedCatId)
-    .then(response => {
-      createInfo(response, breedSelect, infoContainer, iziToastOptions);
-    })
-    .catch(error => {
-      // Отображаем сообщение об ошибке
-      iziToastOptions(error);
-    })
-    .finally(() => {
-      // Скрываем Loader
-      hideLoader();
-    });
+  try {
+    // Реализация запроса породы кошки по значению выбранному из списка,
+    const response = await fetchCatByBreed(selectedCatId);
+    // Отображение данных
+    createInfo(response, breedSelect, infoContainer, iziToastOptions);
+  } catch (error) {
+    // Отображаем сообщение об ошибке
+    iziToastOptions(error);
+  } finally {
+    // Скрываем Loader
+    hideLoader();
+  }
 }
 
 // Опции подключенного через библиотеку alert

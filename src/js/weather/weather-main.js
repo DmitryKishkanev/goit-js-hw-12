@@ -8,7 +8,7 @@ const loaderEl = document.querySelector('.loader');
 
 search.addEventListener('submit', onSearch);
 
-function onSearch(evt) {
+async function onSearch(evt) {
   evt.preventDefault();
 
   // Очищаем контейнер
@@ -20,23 +20,21 @@ function onSearch(evt) {
   // Сохраняем в переменные данные из формы
   const { query, days } = evt.currentTarget.elements;
 
-  // Обрабатываем промис функции запроса на бэкенд
-  fetchWeather(query.value.trim(), days.value)
-    .then(
-      // Создаём карточки с данными из бэкенда
-      data => {
-        list.innerHTML = createMarkup(data.forecast.forecastday);
-        // Очищаем инпут
-        search.reset();
-      }
-    )
-    .catch(error => {
-      console.log(error);
-    })
-    .finally(() => {
-      // Скрываем Loader
-      hideLoader();
-    });
+  try {
+    // Получаем данные c бэкенда
+    const data = await fetchWeather(query.value.trim(), days.value);
+
+    // Создаём карточки с данными из бэкенда
+    list.innerHTML = createMarkup(data.forecast.forecastday);
+
+    // Очищаем инпут
+    search.reset();
+  } catch (error) {
+    console.log('Ошибка при получении данных:', error);
+  } finally {
+    // Скрываем Loader
+    hideLoader();
+  }
 }
 
 // Функция очистки контейнера галереи
