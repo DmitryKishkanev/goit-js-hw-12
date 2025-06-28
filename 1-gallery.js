@@ -1,15 +1,15 @@
-import"./assets/styles-BR4n9dJH.js";import{a as m,S as y,i as g}from"./assets/vendor-BpUGnplp.js";async function f(e){return(await m.get("https://pixabay.com/api/",{params:{key:"50268892-929648ae4af930c873d247de9",q:e,image_type:"photo",orientation:"horizontal",safesearch:!0}})).data}const l=document.querySelector(".gallery"),r=document.querySelector(".loader"),p=new y(".gallery a",{captionsData:"alt",captionPosition:"bottom",captionDelay:250});function d(e){const t=e.map(({webformatURL:a,largeImageURL:o,tags:n,likes:i,views:c,comments:u,downloads:h})=>`
+import"./assets/styles-BR4n9dJH.js";import{a as y,S as m,i as f}from"./assets/vendor-BpUGnplp.js";async function p(e){return(await y.get("https://pixabay.com/api/",{params:{key:"50268892-929648ae4af930c873d247de9",q:e,image_type:"photo",orientation:"horizontal",safesearch:!0}})).data}const n=document.querySelector(".gallery"),s=document.querySelector(".loader"),d=new m(".gallery a",{captionsData:"alt",captionPosition:"bottom",captionDelay:250});function L(e){const t=e.map(({webformatURL:a,largeImageURL:o,tags:l,likes:c,views:h,comments:u,downloads:g})=>`
 <li class="gallery-item">
   <a class="gallery-link" href="${o}">
-    <img class="gallery-image" src="${a}" alt="${n}" />
+    <img class="gallery-image" src="${a}" alt="${l}" />
     <ul class="gallery-analytics">
       <li class="gallery-counters">
         <h1>Likes</h1>
-        ${i}
+        ${c}
       </li>
       <li class="gallery-counters">
         <h1>Views</h1>
-        ${c}
+        ${h}
       </li>
       <li class="gallery-counters">
         <h1>Comments</h1>
@@ -17,11 +17,11 @@ import"./assets/styles-BR4n9dJH.js";import{a as m,S as y,i as g}from"./assets/ve
       </li>
       <li class="gallery-counters">
         <h1>Downloads</h1>
-        ${h}
+        ${g}
       </li>
     </ul>
   </a>
 </li>
 
-  `).join("");l.insertAdjacentHTML("beforeend",t),p.refresh()}function L(){l.innerHTML=""}function b(){r.classList.add("active")}function S(){r.classList.remove("active")}const s=document.querySelector(".form");s.addEventListener("submit",E);function E(e){e.preventDefault(),L(),b();const t=e.currentTarget.elements["search-text"].value.trim();f(t).then(a=>{a.hits.length===0&&$("Sorry, there are no images matching your search query. Please try again!","pink"),d(a.hits),s.reset()}).catch(a=>{console.log(a)}).finally(()=>{S()})}function $(e,t){return g.show({message:e,messageColor:"#ff0000",backgroundColor:t,icon:"	fa fa-ban",iconColor:"#8b0000",position:"topRight"})}
+  `).join("");n.insertAdjacentHTML("beforeend",t),d.refresh()}function w(){n.innerHTML=""}function S(){s.classList.add("active")}function b(){s.classList.remove("active")}const i=document.querySelector(".form");i.addEventListener("submit",E);async function E(e){e.preventDefault(),w(),S();const t=e.currentTarget.elements["search-text"].value.trim();try{const a=await p(t);a.hits.length===0&&r("Sorry, there are no images matching your search query. Please try again!","pink"),L(a.hits)}catch(a){console.log("Ошибка при получении данных:",a),r("Oops! Something went wrong while fetching images. Please try again later.","pink")}finally{i.reset(),b()}}function r(e,t){return f.show({message:e,messageColor:"#ff0000",backgroundColor:t,icon:"	fa fa-ban",iconColor:"#8b0000",position:"topRight"})}
 //# sourceMappingURL=1-gallery.js.map
