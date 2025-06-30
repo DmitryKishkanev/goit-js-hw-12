@@ -47,3 +47,12 @@ button {
     background-color: #6c8cff;
   }
 }
+
+.load-button {
+  margin-top: 32px;
+  margin-bottom: 44px;
+}
+
+.is-hidden {
+  display: none;
+}

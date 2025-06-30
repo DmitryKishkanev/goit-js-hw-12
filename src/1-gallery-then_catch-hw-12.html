@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gallery</title>
+  </head>
+  <body class="gallery-body">
+    <form class="form">
+      <label>
+        <input
+          type="text"
+          name="search-text"
+          placeholder="Search images..."
+          required
+        />
+      </label>
+      <button type="submit">Search</button>
+    </form>
+
+    <ul class="gallery"></ul>
+    <button type="button" class="load-button">Load more</button>
+    <span class="loader"></span>
+
+    <script
+      type="module"
+      src="./js/gallery-then_catch-hw-12/gallery-main.js"
+    ></script>
+  </body>
+</html>
