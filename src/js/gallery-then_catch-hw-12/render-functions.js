@@ -92,4 +92,5 @@ export {
   hideLoader,
   showLoadMoreButton,
   hideLoadMoreButton,
+  loadMoreButton,
 };
