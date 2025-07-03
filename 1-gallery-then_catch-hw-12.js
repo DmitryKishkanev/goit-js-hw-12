@@ -1,27 +1,27 @@
-import"./assets/styles-BvmzGJGv.js";import{a as q,S as v,i as E}from"./assets/vendor-BpUGnplp.js";function i(t,o){return q.get("https://pixabay.com/api/",{params:{key:"50268892-929648ae4af930c873d247de9",q:t,page:o,per_page:100,image_type:"photo",orientation:"horizontal",safesearch:!0}}).then(l=>l.data)}const c=document.querySelector(".gallery"),u=document.querySelector(".loader"),n=document.querySelector(".load-button"),k=new v(".gallery a",{captionsData:"alt",captionPosition:"bottom",captionDelay:250});function h(t){const o=t.map(({webformatURL:r,largeImageURL:s,tags:l,likes:p,views:L,comments:S,downloads:b})=>`
+import"./assets/styles-BvmzGJGv.js";import{a as b,S as H,i as q}from"./assets/vendor-BpUGnplp.js";const S="https://pixabay.com/api/",v="50268892-929648ae4af930c873d247de9";class k{constructor(){this.searchQuery="",this.page=1,this.searchTotalLoaded=0,this.searchTotalHits=0}fetchArticles(){return b.get(S,{params:{key:v,q:this.query,page:this.page,per_page:15,image_type:"photo",orientation:"horizontal",safesearch:!0}}).then(e=>(this.incrementPage(),e.data))}incrementPage(){this.page+=1}resetPage(){this.page=1,this.searchTotalLoaded=0,this.searchTotalHits=0}get query(){return this.searchQuery}set query(e){this.searchQuery=e}get totalLoaded(){return this.searchTotalLoaded}set totalLoaded(e){this.searchTotalLoaded=e}get totalHits(){return this.searchTotalHits}set totalHits(e){this.searchTotalHits=e}}const r=document.querySelector(".gallery"),i=document.querySelector(".loader"),o=document.querySelector(".load-button"),w=new H(".gallery a",{captionsData:"alt",captionPosition:"bottom",captionDelay:250});function l(t){const e=t.map(({webformatURL:g,largeImageURL:y,tags:m,likes:f,views:p,comments:L,downloads:T})=>`
 <li class="gallery-item">
-  <a class="gallery-link" href="${s}">
-    <img class="gallery-image" src="${r}" alt="${l}" />
+  <a class="gallery-link" href="${y}">
+    <img class="gallery-image" src="${g}" alt="${m}" />
     <ul class="gallery-analytics">
       <li class="gallery-counters">
         <h1>Likes</h1>
-        ${p}
+        ${f}
       </li>
       <li class="gallery-counters">
         <h1>Views</h1>
-        ${L}
+        ${p}
       </li>
       <li class="gallery-counters">
         <h1>Comments</h1>
-        ${S}
+        ${L}
       </li>
       <li class="gallery-counters">
         <h1>Downloads</h1>
-        ${b}
+        ${T}
       </li>
     </ul>
   </a>
 </li>
 
-  `).join("");c.insertAdjacentHTML("beforeend",o),k.refresh()}function B(){c.innerHTML=""}function d(){u.classList.add("active")}function g(){u.classList.remove("active")}function y(){n.classList.remove("is-hidden")}function a(){n.classList.add("is-hidden")}const m=document.querySelector(".form");m.addEventListener("submit",M);n.addEventListener("click",$);const e={query:"",page:1,totalLoaded:0,totalHits:0};function H(){e.page=1,e.totalLoaded=0,e.totalHits=0}a();function M(t){t.preventDefault(),B(),a(),d(),H(),e.query=t.currentTarget.elements["search-text"].value.trim(),i(e.query,e.page).then(o=>{if(o.hits.length===0){f("Sorry, there are no images matching your search query. Please try again!","pink");return}h(o.hits),y(),e.totalHits=o.totalHits,e.totalLoaded+=o.hits.length,e.page+=1,m.reset()}).catch(o=>{console.log("Ошибка при загрузке изображений:",o)}).finally(()=>{g()})}function $(){a(),d(),i(e.query,e.page).then(t=>{h(t.hits),e.totalLoaded+=t.hits.length,e.page+=1,e.totalLoaded>=e.totalHits?(f("Sorry, but you have reached the end of the search results","pink"),a()):y()}).catch(t=>{console.log("Ошибка при загрузке дополнительных изображений:",t)}).finally(()=>{g()})}function f(t,o){return E.show({message:t,messageColor:"#ff0000",backgroundColor:o,icon:"	fa fa-ban",iconColor:"#8b0000",position:"topRight"})}
+  `).join("");r.insertAdjacentHTML("beforeend",e),w.refresh()}function B(){r.innerHTML=""}function n(){i.classList.add("active")}function c(){i.classList.remove("active")}function h(){o.classList.remove("is-hidden")}function s(){o.classList.add("is-hidden")}const u=document.querySelector(".form");u.addEventListener("submit",M);o.addEventListener("click",P);const a=new k;s();function M(t){t.preventDefault(),B(),s(),n(),a.resetPage(),a.query=t.currentTarget.elements["search-text"].value.trim(),a.fetchArticles().then(e=>{if(e.hits.length===0){d("Sorry, there are no images matching your search query. Please try again!","pink");return}l(e.hits),h(),a.totalHits=e.totalHits,a.totalLoaded+=e.hits.length,u.reset()}).catch(e=>{console.log("Ошибка при загрузке изображений:",e)}).finally(()=>{c()})}function P(){s(),n(),a.fetchArticles().then(t=>{l(t.hits),a.totalLoaded+=t.hits.length,a.totalLoaded>=a.totalHits?(d("Sorry, but you have reached the end of the search results","pink"),s()):h()}).catch(t=>{console.log("Ошибка при загрузке дополнительных изображений:",t)}).finally(()=>{c()})}function d(t,e){return q.show({message:t,messageColor:"#ff0000",backgroundColor:e,icon:"	fa fa-ban",iconColor:"#8b0000",position:"topRight"})}
 //# sourceMappingURL=1-gallery-then_catch-hw-12.js.map
