@@ -11,13 +11,11 @@ export function getImagesByQuery(query, page) {
         key: API_KEY,
         q: query,
         page: page,
-        per_page: 15,
+        per_page: 100,
         image_type: 'photo',
         orientation: 'horizontal',
         safesearch: true,
       },
     })
-    .then(response => {
-      return response.data;
-    });
+    .then(response => response.data);
 }

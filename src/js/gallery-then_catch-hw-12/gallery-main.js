@@ -19,14 +19,20 @@ const formEl = document.querySelector('.form');
 formEl.addEventListener('submit', onFormSubmit);
 loadMoreButton.addEventListener('click', onLoadMoreButton);
 
-// Переменная для хранения данных их инпута
-let searchInput = '';
-// Переменная хранит номером группы загружаемых элементов
-let page = 1;
-// Переменная для хранения общего кол-ва загруженных элементов
-let totalLoaded = 0;
-// Переменная для хранения общего кол-ва доступных элементов
-let totalHits = 0;
+// Перменная хранит объект состояний
+const searchState = {
+  query: '',
+  page: 1,
+  totalLoaded: 0,
+  totalHits: 0,
+};
+
+// Функция сброса состояний
+function resetSearch() {
+  searchState.page = 1;
+  searchState.totalLoaded = 0;
+  searchState.totalHits = 0;
+}
 
 // Скрываем кнопку load more
 hideLoadMoreButton();
@@ -44,11 +50,11 @@ function onFormSubmit(evt) {
   // Cбрасываем счётчики
   resetSearch();
 
-  // Сохраняем в переменную данные из инпута
-  searchInput = evt.currentTarget.elements['search-text'].value.trim();
+  // Сохраняем в объект состояний данные из инпута
+  searchState.query = evt.currentTarget.elements['search-text'].value.trim();
 
   // Обрабатываем промис функции запроса на бэкенд
-  getImagesByQuery(searchInput, page)
+  getImagesByQuery(searchState.query, searchState.page)
     .then(data => {
       // Если ответ пришёл с ошибкой
       if (data.hits.length === 0) {
@@ -57,22 +63,24 @@ function onFormSubmit(evt) {
           'Sorry, there are no images matching your search query. Please try again!',
           'pink'
         );
+        return;
       }
       // Создаём галерю с данными из бэкенда
       createGallery(data.hits);
       // Отображаем кнопку load more
       showLoadMoreButton();
-      // Увеличиваем номер группы на 1
-      page += 1;
-      // Сохраняем в переменную общее кол-во доступных элементов
-      totalHits = data.totalHits;
-      // Сохраняем в переменную общее кол-во загруженных элементов
-      totalLoaded += data.hits.length;
+
+      // Сохраняем  в объект состояний кол-во доступных элементов
+      searchState.totalHits = data.totalHits;
+      // Сохраняем  в объект состояний общее кол-во загруженных элементов
+      searchState.totalLoaded += data.hits.length;
+      // Сохраняем  в объект состояний увеличение номера группы на 1
+      searchState.page += 1;
       // Очищаем инпут
       formEl.reset();
     })
     .catch(error => {
-      console.log(error);
+      console.log('Ошибка при загрузке изображений:', error);
     })
     .finally(() => {
       // Скрываем Loader
@@ -88,17 +96,17 @@ function onLoadMoreButton() {
   showLoader();
 
   // Функция запроса дополнительной загрузки
-  getImagesByQuery(searchInput, page)
+  getImagesByQuery(searchState.query, searchState.page)
     .then(data => {
-      // Обновляем переменную кол-ва загруженных элементов
-      totalLoaded += data.hits.length;
-      // Увеличиваем перменную номера группы загружаемых элементов на 1
-      page += 1;
       // Добавляем в галерю данные к уже существующим
       createGallery(data.hits);
+      // Обновляем в объекте состояний кол-во загруженных элементов
+      searchState.totalLoaded += data.hits.length;
+      // Увеличиваем в объекте состояний номера группы загружаемых элементов на 1
+      searchState.page += 1;
 
       // Проверяем не превышает ли кол-во загруженных элементов кличества доступных
-      if (totalLoaded >= totalHits) {
+      if (searchState.totalLoaded >= searchState.totalHits) {
         // Отображаем нотификацию, если всё загружено
         iziToastOptions(
           'Sorry, but you have reached the end of the search results',
@@ -112,19 +120,12 @@ function onLoadMoreButton() {
       }
     })
     .catch(error => {
-      console.log(error);
+      console.log('Ошибка при загрузке дополнительных изображений:', error);
     })
     .finally(() => {
       // Скрываем Loader
       hideLoader();
     });
-}
-
-// Функция сброса счётчиков
-function resetSearch() {
-  page = 1;
-  totalLoaded = 0;
-  totalHits = 0;
 }
 
 // Опции подключенного через библиотеку alert
