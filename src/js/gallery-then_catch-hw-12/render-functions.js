@@ -77,12 +77,41 @@ function hideLoader() {
   loaderEl.classList.remove('active');
 }
 
+// Функция отображения кнопки
 function showLoadMoreButton() {
   loadMoreButton.classList.remove('is-hidden');
 }
 
+// Функция скрывания кнопки
 function hideLoadMoreButton() {
   loadMoreButton.classList.add('is-hidden');
+}
+
+// Универсальная функция плавного автоскрола страницы (Пример с другим селектором - scrollAfterRender({ selector: '.news-card', multiplier: 1.5 }))
+function scrollAfterRender(options = {}) {
+  const {
+    // Селектор карточки по умолчанию
+    selector = '.gallery-item',
+    // Множитель высоты по умолчанию
+    multiplier = 2,
+  } = options;
+
+  // Встроенная функция браузера, делает вызов колбека отложенным
+  requestAnimationFrame(function () {
+    // Получаем в переменную нашу карточку
+    const card = document.querySelector(selector);
+    // Если получили карточку
+    if (card) {
+      // Получаем в переменную именно высоту нашей карточки
+      const cardHeight = card.getBoundingClientRect().height;
+      // Прокручиваем страницу вниз на две высоты карточки
+      window.scrollBy({
+        top: cardHeight * multiplier,
+        left: 0,
+        behavior: 'smooth',
+      });
+    }
+  });
 }
 
 export {
@@ -93,4 +122,5 @@ export {
   showLoadMoreButton,
   hideLoadMoreButton,
   loadMoreButton,
+  scrollAfterRender,
 };

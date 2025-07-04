@@ -1,7 +1,7 @@
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-// import {getImagesByQuery} from './pixabay-api';
+// import { getImagesByQuery } from './pixabay-api';
 import GetImagesByQuery from './pixabay-api';
 import {
   createGallery,
@@ -11,6 +11,7 @@ import {
   showLoadMoreButton,
   hideLoadMoreButton,
   loadMoreButton,
+  scrollAfterRender,
 } from './render-functions';
 import '../../css/styles.css';
 
@@ -21,7 +22,7 @@ formEl.addEventListener('submit', onFormSubmit);
 loadMoreButton.addEventListener('click', onLoadMoreButton);
 
 // Создаём экземпляр класса
-const getImagesByQuery = new GetImagesByQuery();
+const imageFetcher = new GetImagesByQuery();
 
 // Скрываем кнопку load more
 hideLoadMoreButton();
@@ -37,14 +38,13 @@ function onFormSubmit(evt) {
   // Показываем Loader
   showLoader();
   // Cбрасываем объект состояний
-  getImagesByQuery.resetPage();
+  imageFetcher.resetPage();
 
   // Сохраняем в объект состояний данные из инпута
-  getImagesByQuery.query =
-    evt.currentTarget.elements['search-text'].value.trim();
+  imageFetcher.query = evt.currentTarget.elements['search-text'].value.trim();
 
   // Обрабатываем промис функции запроса на бэкенд из экземпляра класса
-  getImagesByQuery
+  imageFetcher
     .fetchArticles()
     .then(data => {
       // Если ответ пришёл с ошибкой
@@ -62,15 +62,19 @@ function onFormSubmit(evt) {
       showLoadMoreButton();
 
       // Сохраняем  в объект состояний кол-во доступных элементов
-      getImagesByQuery.totalHits = data.totalHits;
+      imageFetcher.totalHits = data.totalHits;
       // Сохраняем  в объект состояний общее кол-во загруженных элементов
-      getImagesByQuery.totalLoaded += data.hits.length;
+      imageFetcher.totalLoaded += data.hits.length;
 
       // Очищаем инпут
       formEl.reset();
     })
     .catch(error => {
-      console.log('Ошибка при загрузке изображений:', error);
+      console.log('Ошибка, что-то пошло не так:', error);
+      iziToastOptions(
+        'Oops! Something went wrong while fetching images. Please try again later.',
+        'pink'
+      );
     })
     .finally(() => {
       // Скрываем Loader
@@ -86,16 +90,18 @@ function onLoadMoreButton() {
   showLoader();
 
   // Обрабатываем промис функции запроса на бэкенд за дополнительной загрузкой
-  getImagesByQuery
+  imageFetcher
     .fetchArticles()
     .then(data => {
       // Добавляем в галерю данные к уже существующим
       createGallery(data.hits);
+      // Плавно скролим страницу
+      scrollAfterRender();
       // Обновляем в объекте состояний кол-во загруженных элементов
-      getImagesByQuery.totalLoaded += data.hits.length;
+      imageFetcher.totalLoaded += data.hits.length;
 
       // Проверяем не превышает ли кол-во загруженных элементов кличества доступных
-      if (getImagesByQuery.totalLoaded >= getImagesByQuery.totalHits) {
+      if (!imageFetcher.hasMore()) {
         // Отображаем нотификацию, если всё загружено
         iziToastOptions(
           'Sorry, but you have reached the end of the search results',
@@ -109,7 +115,11 @@ function onLoadMoreButton() {
       }
     })
     .catch(error => {
-      console.log('Ошибка при загрузке дополнительных изображений:', error);
+      console.log('Ошибка, что-то пошло не так:', error);
+      iziToastOptions(
+        'Oops! Something went wrong while fetching images. Please try again later.',
+        'pink'
+      );
     })
     .finally(() => {
       // Скрываем Loader
@@ -178,7 +188,11 @@ function onLoadMoreButton() {
 //       formEl.reset();
 //     })
 //     .catch(error => {
-//       console.log('Ошибка при загрузке изображений:', error);
+//       console.log('Ошибка при запросе изображений:', error);
+//       iziToastOptions(
+//         'Oops! Something went wrong while fetching images. Please try again later.',
+//         'pink'
+//       );
 //     })
 //     .finally(() => {
 //       // Скрываем Loader
@@ -198,6 +212,8 @@ function onLoadMoreButton() {
 //     .then(data => {
 //       // Добавляем в галерю данные к уже существующим
 //       createGallery(data.hits);
+//       // Плавно скролим страницу
+//       scrollAfterRender();
 //       // Обновляем в объекте состояний кол-во загруженных элементов
 //       searchState.totalLoaded += data.hits.length;
 //       // Увеличиваем в объекте состояний номера группы загружаемых элементов на 1
@@ -218,7 +234,11 @@ function onLoadMoreButton() {
 //       }
 //     })
 //     .catch(error => {
-//       console.log('Ошибка при загрузке дополнительных изображений:', error);
+//       console.log('Ошибка при запросе изображений:', error);
+//       iziToastOptions(
+//         'Oops! Something went wrong while fetching images. Please try again later.',
+//         'pink'
+//       );
 //     })
 //     .finally(() => {
 //       // Скрываем Loader

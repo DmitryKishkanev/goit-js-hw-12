@@ -8,11 +8,14 @@ const API_KEY = '50268892-929648ae4af930c873d247de9';
 // Класс запроса на бэкенд
 export default class GetImagesByQuery {
   // Конструктор для хранения объекта состояний
-  constructor() {
+  constructor(options = {}) {
     this.searchQuery = '';
     this.page = 1;
     this.searchTotalLoaded = 0;
     this.searchTotalHits = 0;
+
+    this.perPage = options.perPage || 15;
+    this.orientation = options.orientation || 'horizontal';
   }
 
   // Функция запроса на бэкенд
@@ -21,11 +24,11 @@ export default class GetImagesByQuery {
       .get(BASE_URL, {
         params: {
           key: API_KEY,
-          q: this.query,
+          q: this.searchQuery,
           page: this.page,
-          per_page: 15,
+          per_page: this.perPage,
           image_type: 'photo',
-          orientation: 'horizontal',
+          orientation: this.orientation,
           safesearch: true,
         },
       })
@@ -33,6 +36,11 @@ export default class GetImagesByQuery {
         this.incrementPage();
 
         return response.data;
+      })
+      .catch(error => {
+        console.error('Ошибка при запросе изображений:', error);
+        // Пробрасываем ошибку дальше для обработки
+        throw error;
       });
   }
   // Метод увеличения номера группы загружаемых данных на 1
@@ -45,6 +53,11 @@ export default class GetImagesByQuery {
     this.page = 1;
     this.searchTotalLoaded = 0;
     this.searchTotalHits = 0;
+  }
+
+  // Метод проверки доступных изображений
+  hasMore() {
+    return this.searchTotalLoaded < this.searchTotalHits;
   }
 
   // Геттеры и сеттеры для записи и чтения состояний конструктора
