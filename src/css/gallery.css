@@ -6,14 +6,6 @@
   background-repeat: no-repeat;
 }
 
-.gallery-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 32px;
-  margin-bottom: 32px;
-}
-
 .gallery {
   display: grid;
   width: 1128px;

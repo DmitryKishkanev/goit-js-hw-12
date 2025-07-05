@@ -2,7 +2,7 @@ import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 // Именованный импорт
-import { fetchBreeds, fetchCatByBreed } from './cat-api';
+import { fetchBreeds, fetchCatByBreed } from './cat-info-api';
 // Именованный импорт
 import {
   createSelect,
@@ -19,7 +19,7 @@ const breedSelect = document.querySelector('.breed-select');
 const infoContainer = document.querySelector('.cat-info');
 
 // Вешаем слушатель события change на HTML-элемент списка
-breedSelect.addEventListener('change', onBreedSelect);
+breedSelect.addEventListener('change', onbreedSelect);
 
 // Скрываем HTML-элемент списка
 breedSelect.classList.add('is-hidden');
@@ -27,25 +27,25 @@ breedSelect.classList.add('is-hidden');
 // Отображения loader
 showLoader();
 
-async function handleBreeds() {
-  try {
-    const response = await fetchBreeds();
+// Реализация запроса всех пород кошек, создание списка, оброботка ошибки
+fetchBreeds()
+  .then(response => {
     createSelect(response, breedSelect);
-  } catch (error) {
+  })
+  .catch(error => {
     // Отображаем сообщение об ошибке
     iziToastOptions(error);
 
     // Скрываем HTML-элемент списка
     breedSelect.classList.add('is-hidden');
-  } finally {
+  })
+  .finally(() => {
     // Скрываем Loader
     hideLoader();
-  }
-}
-handleBreeds();
+  });
 
 // Обработчик слушателя события
-async function onBreedSelect() {
+function onbreedSelect() {
   // Скрываем контейнер
   infoContainer.classList.add('is-hidden');
 
@@ -54,18 +54,21 @@ async function onBreedSelect() {
 
   // Получаем в переменную значение выбранное из списка
   const selectedCatId = breedSelect.value;
-  try {
-    // Реализация запроса породы кошки по значению выбранному из списка,
-    const response = await fetchCatByBreed(selectedCatId);
-    // Отображение данных
-    createInfo(response, breedSelect, infoContainer, iziToastOptions);
-  } catch (error) {
-    // Отображаем сообщение об ошибке
-    iziToastOptions(error);
-  } finally {
-    // Скрываем Loader
-    hideLoader();
-  }
+
+  // Реализация запроса породы кошки по значению выбранному из списка,
+  // отображение данных, обработка ошибки
+  fetchCatByBreed(selectedCatId)
+    .then(response => {
+      createInfo(response, breedSelect, infoContainer, iziToastOptions);
+    })
+    .catch(error => {
+      // Отображаем сообщение об ошибке
+      iziToastOptions(error);
+    })
+    .finally(() => {
+      // Скрываем Loader
+      hideLoader();
+    });
 }
 
 // Опции подключенного через библиотеку alert

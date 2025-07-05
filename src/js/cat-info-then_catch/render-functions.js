@@ -1,5 +1,5 @@
 // Именованный импорт
-import { fetchBreedInfo } from './cat-api';
+import { fetchBreedInfo } from './cat-info-api';
 
 // Получаем в переменную HTML-элемент loader
 const loaderEl = document.querySelector('.loader');
@@ -20,34 +20,35 @@ function createSelect(breeds, breedSelect) {
 }
 
 // Функция отображения информации о выбранной породе
-async function createInfo(card, breedSelect, infoContainer, iziToastOptions) {
+function createInfo(card, breedSelect, infoContainer, iziToastOptions) {
   // Сохраняем в перменную объект полученный из запроса
   const cat = card.data[0];
 
-  try {
-    // Получаем информацию о породе
-    const breed = await fetchBreedInfo(breedSelect.value);
-
-    // Создаём разметку карточки
-    const cardMarkup = `
-  <div class="cat-card">
-    <img src="${cat.url}" alt="${breed.name}" class="cat-img" />
-    <div class="cat-description">
-      <h2>${breed.name}</h2>
-      <p><strong>Temperament:</strong> ${breed.temperament}</p>
-      <p><strong>Description:</strong> ${breed.description}</p>
-    </div>
+  // Реализация допролнительного запроса информации по значению выбранному из списка,
+  // создание отобаржаемой карточки,
+  // обработка ошибки
+  fetchBreedInfo(breedSelect.value)
+    .then(breed => {
+      const cardMarkup = `
+<div class="cat-card">
+  <img src="${cat.url}" alt="${breed.name}" class="cat-img" />
+  <div class="cat-description">
+    <h2>${breed.name}</h2>
+    <p><strong>Temperament:</strong> ${breed.temperament}</p>
+    <p><strong>Description:</strong> ${breed.description}</p>
   </div>
-      `;
-    // Отображаем контейнер
-    infoContainer.classList.remove('is-hidden');
+</div>
+    `;
+      // Отображаем контейнер
+      infoContainer.classList.remove('is-hidden');
 
-    // Добавляем в контейнер нашу карточку
-    infoContainer.innerHTML = cardMarkup;
-  } catch (error) {
-    // обработка ошибки
-    iziToastOptions(error);
-  }
+      // Добавляем в контейнер нашу карточку
+      infoContainer.innerHTML = cardMarkup;
+    })
+    .catch(error => {
+      // Отображаем сообщение об ошибке
+      iziToastOptions(error);
+    });
 }
 
 // Функция отображения Loader
